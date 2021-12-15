@@ -2,7 +2,10 @@
 name = "irdata"
 version = "0.1.0"
 description = "Data processing library for iRefIndex"
-authors = ["Ian Donaldson <ian.donaldson@biotek.uio.no>"]
+readme = "README.md"
+authors = ["VIB Bioinformatics Core Facility <bits@vib.be>",
+           "Ian Donaldson <ian.donaldson@biotek.uio.no>"]
+repository = "https://github.com/vibbits/irdata"
 license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
