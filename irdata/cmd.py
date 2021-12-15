@@ -23,8 +23,10 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, sys
 
+
 def get_progname():
     return os.path.split(sys.argv[0])[-1]
+
 
 def get_lists(arg):
 
@@ -44,5 +46,6 @@ def get_lists(arg):
             l = "all"
         lists.append(l)
     return lists
+
 
 # vim: tabstop=4 expandtab shiftwidth=4

@@ -21,16 +21,22 @@ You should have received a copy of the GNU General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import xml.sax
-import gzip
-import sys
-from os.path import splitext
+from typing import Union
 
-class Parser(xml.sax.handler.ContentHandler):
+from xml.sax.handler import ContentHandler
+import os
+import io
+import gzip
+from pathlib import Path
+import defusedxml.sax as sax
+
+
+class Parser(ContentHandler):
 
     "A generic parser."
 
     def __init__(self):
+        ContentHandler.__init__(self)
         self.current_path = []
         self.current_attrs = []
         self.path_to_attrs = {}
@@ -45,28 +51,21 @@ class Parser(xml.sax.handler.ContentHandler):
         self.current_attrs.pop()
         del self.path_to_attrs[name]
 
-    def parse(self, filename):
+    def parse(self, source: Union[io.BufferedIOBase, str, os.PathLike]):
 
         """
-        Parse the file with the given 'filename'.
+        Parse XML from `source` which should be an
+        open file in binary mode or a filename.
         """
 
-        basename, ext = splitext(filename)
+        if isinstance(source, io.BufferedIOBase):
+            return sax.parse(source, handler=self)
 
-        if ext.endswith("gz"):
-            opener = gzip.open
-        else:
-            opener = open
+        opener = gzip.open if Path(source).suffix == ".gz" else open
 
-        f = opener(filename, "rb")
-        try:
-            parser = xml.sax.make_parser()
-            parser.setContentHandler(self)
-            parser.setErrorHandler(xml.sax.handler.ErrorHandler())
-            parser.setFeature(xml.sax.handler.feature_external_ges, 0)
-            parser.parse(f)
-        finally:
-            f.close()
+        with opener(source, "rb") as _source:
+            return sax.parse(_source, handler=self)
+
 
 class EmptyElementParser(Parser):
 
@@ -94,5 +93,6 @@ class EmptyElementParser(Parser):
             self.current_chars[current_path] = content
         else:
             self.current_chars[current_path] += content
+
 
 # vim: tabstop=4 expandtab shiftwidth=4

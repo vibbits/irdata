@@ -24,6 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import codecs, os
 
+
 class Reader:
 
     "Provide properly unbuffered stream reading."
@@ -50,6 +51,7 @@ class Reader:
     def _decode(self, s):
         return unicode(s, self.encoding)
 
+
 def rewrite(stream, encoding="utf-8"):
 
     "Re-open the given 'stream' for writing, applying the specified 'encoding'."
@@ -57,13 +59,16 @@ def rewrite(stream, encoding="utf-8"):
     writer = codecs.getwriter(encoding)
     return writer(stream)
 
+
 def reread(stream, encoding="utf-8"):
 
     "Re-open the given 'stream' for reading, applying the specified 'encoding'."
 
     return Reader(stream, encoding)
 
+
 # Basic value handling.
+
 
 def bulkstr(x):
 
@@ -74,9 +79,12 @@ def bulkstr(x):
     else:
         x = unicode(x)
         if "\\" in x:
-            return x.replace("\\", r"\\") # replace single backslash with double backslash
+            return x.replace(
+                "\\", r"\\"
+            )  # replace single backslash with double backslash
         else:
             return x
+
 
 def tab_to_space(x):
     if x is None:
@@ -84,7 +92,9 @@ def tab_to_space(x):
     else:
         return x.replace("\t", " ")
 
+
 # Utility classes.
+
 
 class RawImportFile:
 
@@ -104,7 +114,12 @@ class RawImportFile:
     def append(self, values):
         # Convert None to the empty string, since there is no sensible
         # distinction between the two values in this format.
-        self.last_write = self.delimiter.join([(value is not None and unicode(value) or u"") for value in values]) + "\n"
+        self.last_write = (
+            self.delimiter.join(
+                [(value is not None and unicode(value) or u"") for value in values]
+            )
+            + "\n"
+        )
         self.file.write(self.last_write)
 
     def remove_last(self):
@@ -116,6 +131,7 @@ class RawImportFile:
 
     def time_now(self):
         return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+
 
 class RawImportFileReader:
 
@@ -141,6 +157,7 @@ class RawImportFileReader:
 
     def close(self):
         self.file.close()
+
 
 class Writer:
 
@@ -175,7 +192,9 @@ class Writer:
             f.close()
         self.files = {}
 
+
 # Miscellaneous conversion functions.
+
 
 def index_for_int(x):
 
@@ -185,6 +204,7 @@ def index_for_int(x):
         return max(0, int(x) - 1)
     else:
         return None
+
 
 def partition(l, start=None, end=None):
 
@@ -206,10 +226,12 @@ def partition(l, start=None, end=None):
 
     return preceding, l[start:end], following
 
+
 def int_or_none(x):
     if x is not None:
         return int(x)
     else:
         return None
+
 
 # vim: tabstop=4 expandtab shiftwidth=4

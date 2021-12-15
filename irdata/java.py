@@ -33,12 +33,15 @@ import struct
 # Outer array description.
 # Inner array description.
 
-stream_start = "\xac\xed\x00\x05" \
-    "\x75\x72\x00\x03[[I\x17\xf7\xe4\x4f\x19\x8f\x89\x3c\x02\x00\x00\x78\x70\x00\x16\xc9\x3d" \
+stream_start = (
+    "\xac\xed\x00\x05"
+    "\x75\x72\x00\x03[[I\x17\xf7\xe4\x4f\x19\x8f\x89\x3c\x02\x00\x00\x78\x70\x00\x16\xc9\x3d"
     "\x75\x72\x00\x02[I\x4d\xba\x60\x26\x76\xea\xb2\xa5\x02\x00\x00\x78\x70"
+)
 
 first_pair_value_start = "\x00\x00\x00\x02"
 pair_value_start = "\x75\x71\x00\x7e\x00\x02" + first_pair_value_start
+
 
 def dump_pairs(pairs, out):
     out.write(stream_start)
@@ -51,5 +54,6 @@ def dump_pairs(pairs, out):
             out.write(pair_value_start)
         out.write(struct.pack(">l", pair[0]))
         out.write(struct.pack(">l", pair[1]))
+
 
 # vim: tabstop=4 expandtab shiftwidth=4

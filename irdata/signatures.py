@@ -23,14 +23,10 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import base64, re
 
-try:
-    from hashlib import sha1
-except ImportError:
-    import sha
-    def sha1(s):
-        return sha.new(s)
+from hashlib import sha1
 
 strip_regexp = re.compile("[^A-Z0-9]")
+
 
 def fix_signatures(signatures):
 
@@ -46,6 +42,7 @@ def fix_signatures(signatures):
         fixed.append(signature)
     return fixed
 
+
 def combine_signatures(signatures, legacy=0):
 
     """
@@ -57,6 +54,7 @@ def combine_signatures(signatures, legacy=0):
     signatures.sort()
     return make_signature("".join(signatures), legacy)
 
+
 def normalise_sequence(sequence):
 
     """
@@ -65,6 +63,7 @@ def normalise_sequence(sequence):
     """
 
     return strip_regexp.sub("", sequence.upper())
+
 
 def make_signature(sequence, legacy=0):
 
@@ -78,6 +77,7 @@ def make_signature(sequence, legacy=0):
     if legacy:
         sequence = normalise_sequence(sequence)
     return base64.b64encode(sha1(sequence).digest())[:-1]
+
 
 def process_file(f, out, column, separator=",", append=0, append_length=0, legacy=0):
 
@@ -116,5 +116,6 @@ def process_file(f, out, column, separator=",", append=0, append_length=0, legac
             columns.append("")
 
         out.write("\t".join(columns) + "\n")
+
 
 # vim: tabstop=4 expandtab shiftwidth=4
