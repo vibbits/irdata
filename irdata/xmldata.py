@@ -80,7 +80,7 @@ class EmptyElementParser(Parser):
 
     def endElement(self, name):
         current_path = tuple(self.current_path)
-        if not self.current_chars.has_key(current_path):
+        if current_path not in self.current_chars:
             self.handleElement("")
         else:
             self.handleElement(self.current_chars[current_path])
@@ -89,7 +89,7 @@ class EmptyElementParser(Parser):
 
     def characters(self, content):
         current_path = tuple(self.current_path)
-        if not self.current_chars.has_key(current_path):
+        if current_path not in self.current_chars:
             self.current_chars[current_path] = content
         else:
             self.current_chars[current_path] += content
