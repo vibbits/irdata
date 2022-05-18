@@ -9,6 +9,7 @@ name: Release Workflow
 jobs:
   release:
     name: Package release on GitHub
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
