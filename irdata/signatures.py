@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Signature/digest calculation support.
@@ -21,8 +21,8 @@ You should have received a copy of the GNU General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import base64, re
-
+import base64
+import re
 from hashlib import sha1
 
 strip_regexp = re.compile("[^A-Z0-9]")

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Handling of data outside the database and for preparation for import into the
@@ -22,7 +22,9 @@ You should have received a copy of the GNU General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import codecs, os
+import codecs
+import os
+import time
 
 
 class Reader:
@@ -36,7 +38,7 @@ class Reader:
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         s = self.stream.readline()
         if not s:
             raise StopIteration
@@ -49,7 +51,7 @@ class Reader:
         self.stream.close()
 
     def _decode(self, s):
-        return unicode(s, self.encoding)
+        return str(s, encoding=self.encoding)
 
 
 def rewrite(stream, encoding="utf-8"):
@@ -77,7 +79,7 @@ def bulkstr(x):
     if x is None:
         return r"\N"
     else:
-        x = unicode(x)
+        x = str(x)
         if "\\" in x:
             return x.replace(
                 "\\", r"\\"
@@ -116,7 +118,7 @@ class RawImportFile:
         # distinction between the two values in this format.
         self.last_write = (
             self.delimiter.join(
-                [(value is not None and unicode(value) or u"") for value in values]
+                [(value is not None and str(value) or u"") for value in values]
             )
             + "\n"
         )
@@ -152,8 +154,8 @@ class RawImportFileReader:
         self.iterator = iter(self.file)
         return self
 
-    def next(self):
-        return self.iterator.next().rstrip("\n").split(self.delimiter)
+    def __next__(self):
+        return next(self.iterator).rstrip("\n").split(self.delimiter)
 
     def close(self):
         self.file.close()
@@ -163,8 +165,9 @@ class Writer:
 
     "A simple writer of tabular data."
 
-    def __init__(self, directory):
+    def __init__(self, directory, filenames):
         self.directory = directory
+        self.filenames = filenames
         self.files = {}
         self.filename = None
 

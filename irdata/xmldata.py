@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 XML parsing utilities.
@@ -28,7 +28,7 @@ import os
 import io
 import gzip
 from pathlib import Path
-import defusedxml.sax as sax
+from defusedxml import sax
 
 
 class Parser(ContentHandler):
@@ -93,6 +93,9 @@ class EmptyElementParser(Parser):
             self.current_chars[current_path] = content
         else:
             self.current_chars[current_path] += content
+
+    def handleElement(self, content):
+        "Handle a completed element with the given 'content'."
 
 
 # vim: tabstop=4 expandtab shiftwidth=4
