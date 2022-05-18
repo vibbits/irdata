@@ -1,0 +1,33 @@
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+name: Release Workflow
+
+jobs:
+  release:
+    name: Package release on GitHub
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Create github release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          prerelease: false
+          draft: true
+          files: |
+            dist/irdata-*.tar.gz
+            dist/irdata-*-py3-none-any.whl
+
+      - name: Publish to PyPI
+        run: poetry publish -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASSWORD }}
+
+      
