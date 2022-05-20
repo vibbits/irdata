@@ -22,8 +22,8 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import base64
+import hashlib
 import re
-from hashlib import sha1
 
 strip_regexp = re.compile("[^A-Z0-9]")
 
@@ -76,7 +76,9 @@ def make_signature(sequence, legacy=0):
 
     if legacy:
         sequence = normalise_sequence(sequence)
-    return base64.b64encode(sha1(sequence).digest())[:-1]
+    digest = hashlib.sha1(sequence.encode("utf-8")).digest()
+    b64enc = base64.b64encode(digest)[:-1]
+    return b64enc.decode("utf-8")
 
 
 def process_file(f, out, column, separator=",", append=0, append_length=0, legacy=0):
@@ -99,7 +101,7 @@ def process_file(f, out, column, separator=",", append=0, append_length=0, legac
     true value. This is not recommended.
     """
 
-    for line in f.xreadlines():
+    for line in f.readlines():
         columns = line.rstrip("\n").split("\t")
         inputs = columns[column].split(separator)
         signatures = fix_signatures(inputs)
