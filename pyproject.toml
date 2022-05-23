@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "irdata"
-version = "0.2.2"
+version = "0.2.4"
 description = "Data processing library for iRefIndex"
 readme = "README.md"
 authors = ["VIB Bioinformatics Core Facility <bits@vib.be>",
