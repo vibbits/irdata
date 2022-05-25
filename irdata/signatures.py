@@ -101,7 +101,7 @@ def process_file(f, out, column, separator=",", append=0, append_length=0, legac
     true value. This is not recommended.
     """
 
-    for line in f.readlines():
+    for line in f:
         columns = line.rstrip("\n").split("\t")
         inputs = columns[column].split(separator)
         signatures = fix_signatures(inputs)
